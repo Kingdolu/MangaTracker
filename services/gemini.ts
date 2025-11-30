@@ -1,10 +1,18 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { Manga, RecommendedManga } from "../types";
 import { searchManga } from "./anilist";
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+import { GEMINI_API_KEY } from "../constants";
 
 export const getRecommendations = async (library: Manga[], sourceManga?: Manga): Promise<RecommendedManga[]> => {
+  // Safety check: if no key, return empty immediately instead of crashing
+  if (!GEMINI_API_KEY) {
+    console.warn("Gemini API Key is missing. Recommendations disabled.");
+    return [];
+  }
+
+  const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+
   let prompt = "";
 
   // 1. Single Title Mode
@@ -52,11 +60,9 @@ export const getRecommendations = async (library: Manga[], sourceManga?: Manga):
     const results: RecommendedManga[] = [];
 
     // Fetch details for each recommended title
-    // We use Promise.all to fetch them in parallel for speed
     await Promise.all(recommendations.map(async (rec: { title: string; reason: string }) => {
         try {
             const searchResults = await searchManga(rec.title);
-            // If we found a match, use the first one
             if (searchResults && searchResults.length > 0) {
                 // Check if we haven't already added this ID (dedupe)
                 if (!results.some(r => r.id === searchResults[0].id)) {
