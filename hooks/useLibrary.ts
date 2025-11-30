@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { LibraryItem, Manga, ReadingStatus } from '../types';
 
@@ -43,12 +42,12 @@ export const useLibrary = () => {
     }
   };
 
-  const removeFromLibrary = (id: number) => {
+  const removeFromLibrary = (id: string) => {
     const updated = library.filter(item => item.id !== id);
     saveLibraryLocal(updated);
   };
 
-  const getStatus = (id: number): ReadingStatus | undefined => {
+  const getStatus = (id: string): ReadingStatus | undefined => {
     return library.find(item => item.id === id)?.readingStatus;
   };
 
@@ -57,7 +56,7 @@ export const useLibrary = () => {
     addToLibrary, 
     removeFromLibrary, 
     getStatus, 
-    user: null, // No user in local-only mode
+    user: null, 
     loading 
   };
 };

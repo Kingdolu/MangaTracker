@@ -1,7 +1,6 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { Manga, RecommendedManga } from "../types";
-import { searchManga } from "./anilist";
+import { searchManga } from "./comick";
 import { GEMINI_API_KEY } from "../constants";
 
 export const getRecommendations = async (library: Manga[], sourceManga?: Manga): Promise<RecommendedManga[]> => {
@@ -70,7 +69,7 @@ export const getRecommendations = async (library: Manga[], sourceManga?: Manga):
     
     const results: RecommendedManga[] = [];
 
-    // Fetch details for each recommended title
+    // Fetch details for each recommended title using Comick API
     await Promise.all(recommendations.map(async (rec: { title: string; reason: string }) => {
         try {
             const searchResults = await searchManga(rec.title);

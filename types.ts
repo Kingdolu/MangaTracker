@@ -17,12 +17,12 @@ export interface MangaCover {
 }
 
 export interface Manga {
-  id: number;
+  id: string; // Changed from number to string for Comick HID
   title: MangaTitle;
   coverImage: MangaCover;
   description: string;
   status: string;
-  chapters: number | null;
+  chapters: number | null; // This will now represent "Latest Chapter"
   averageScore: number | null;
   genres: string[];
 }

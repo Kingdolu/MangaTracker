@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState, useCallback } from 'react';
-import { getTrendingManhwa } from '../services/anilist';
+import { getTrendingManhwa } from '../services/comick';
 import { getRecommendations } from '../services/gemini';
 import { Manga, RecommendedManga } from '../types';
 import MangaCard from '../components/MangaCard';
