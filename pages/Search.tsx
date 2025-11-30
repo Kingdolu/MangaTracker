@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Search as SearchIcon, Loader2, X } from 'lucide-react';
-import { searchManga } from '../services/comick';
+import { searchManga } from '../services/anilist';
 import { Manga } from '../types';
 import MangaCard from '../components/MangaCard';
 import { useNavigate } from 'react-router-dom';
