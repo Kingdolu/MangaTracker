@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLibrary } from '../hooks/useLibrary';
 import { getRecommendations } from '../services/gemini';
@@ -45,14 +46,14 @@ const RecommendationsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 pb-24 min-h-screen">
+    <div className="p-4 pb-24 min-h-screen max-w-7xl mx-auto w-full">
       <div className="flex flex-col items-center">
         <div className="w-full max-w-lg">
-            <div className="flex items-center gap-2 mb-6">
-            <Sparkles className="text-purple-400" />
-            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-                AI Recommendations
-            </h1>
+            <div className="flex items-center gap-2 mb-6 justify-center md:justify-start">
+                <Sparkles className="text-purple-400" />
+                <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+                    AI Recommendations
+                </h1>
             </div>
 
             <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 text-center mb-8 relative overflow-hidden">
@@ -111,16 +112,16 @@ const RecommendationsPage: React.FC = () => {
               No recommendations found. Try adding more titles to your library!
           </div>
       ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {recommendations.map((manga) => (
-                <div key={manga.id} className="flex flex-col">
+                <div key={manga.id} className="flex flex-col h-full">
                     <MangaCard 
                         manga={manga} 
                         onClick={() => navigate(`/details/${manga.id}`, { state: { manga } })}
                         status={getStatus(manga.id)}
                     />
-                    <div className="bg-gray-800/50 p-2 rounded-b-lg border-x border-b border-gray-700/50 mt-1">
-                         <p className="text-[10px] text-purple-300 italic leading-tight">
+                    <div className="bg-gray-800/50 p-3 rounded-b-lg border-x border-b border-gray-700/50 mt-1 flex-1">
+                         <p className="text-[11px] text-purple-300 italic leading-snug">
                             "{manga.recommendationReason}"
                          </p>
                     </div>

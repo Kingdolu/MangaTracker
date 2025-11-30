@@ -32,7 +32,7 @@ const LibraryPage: React.FC = () => {
   const tabs = ['All', ...Object.values(ReadingStatus)];
 
   return (
-    <div className="p-4 pb-24 min-h-screen relative">
+    <div className="p-4 pb-24 min-h-screen relative max-w-7xl mx-auto w-full">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
@@ -100,7 +100,7 @@ const LibraryPage: React.FC = () => {
           <Loader2 className="animate-spin text-blue-500" size={32} />
         </div>
       ) : filteredLibrary.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {filteredLibrary.map((item) => (
             <MangaCard 
               key={item.id} 

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { getTrendingManhwa } from '../services/anilist';
 import { getRecommendations } from '../services/gemini';
@@ -14,56 +15,81 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { library, getStatus } = useLibrary();
 
-  const loadContent = useCallback(async () => {
+  const loadContent = useCallback(async (forceRefresh = false) => {
     setLoading(true);
+
+    // Check cache first if not forcing refresh
+    if (!forceRefresh) {
+      const cachedContent = sessionStorage.getItem('home_content');
+      const cachedMode = sessionStorage.getItem('home_mode');
+      if (cachedContent && cachedMode) {
+        setContent(JSON.parse(cachedContent));
+        setMode(cachedMode as 'trending' | 'recommended');
+        setLoading(false);
+        return;
+      }
+    }
+
     const hasLibrary = library.length > 0;
     
     // Logic: If user has a library, 60% chance to show AI picks, 40% random trending.
     // If no library, always show trending.
     const useRecommendations = hasLibrary && Math.random() > 0.4;
 
+    let newContent: (Manga | RecommendedManga)[] = [];
+    let newMode: 'trending' | 'recommended' = 'trending';
+
     if (useRecommendations) {
-      setMode('recommended');
+      newMode = 'recommended';
       try {
         const recs = await getRecommendations(library);
         if (recs.length > 0) {
-          setContent(recs);
+          newContent = recs;
         } else {
           // Fallback if AI returns nothing
-          setMode('trending');
+          newMode = 'trending';
           const randomPage = Math.floor(Math.random() * 5) + 1;
-          const trending = await getTrendingManhwa(randomPage);
-          setContent(trending);
+          newContent = await getTrendingManhwa(randomPage);
         }
       } catch (e) {
-        setMode('trending');
+        newMode = 'trending';
         const randomPage = Math.floor(Math.random() * 5) + 1;
-        const trending = await getTrendingManhwa(randomPage);
-        setContent(trending);
+        newContent = await getTrendingManhwa(randomPage);
       }
     } else {
-      setMode('trending');
+      newMode = 'trending';
       // Fetch a random page between 1 and 5 to keep trending content fresh
       const randomPage = Math.floor(Math.random() * 5) + 1;
-      const trending = await getTrendingManhwa(randomPage);
-      setContent(trending);
+      newContent = await getTrendingManhwa(randomPage);
     }
+
+    setContent(newContent);
+    setMode(newMode);
+    
+    // Save to session storage
+    sessionStorage.setItem('home_content', JSON.stringify(newContent));
+    sessionStorage.setItem('home_mode', newMode);
+    
     setLoading(false);
   }, [library]);
 
   useEffect(() => {
-    loadContent();
-  }, []); // Runs once on mount (refresh)
+    loadContent(false);
+  }, []); // Runs once on mount
+
+  const handleRefresh = () => {
+    loadContent(true);
+  };
 
   return (
-    <div className="p-4 pb-24 min-h-screen">
+    <div className="p-4 pb-24 min-h-screen max-w-7xl mx-auto w-full">
       <div className="flex justify-between items-start mb-8">
         <div>
             <h1 className="text-3xl font-extrabold text-white mb-1">Manhwa<span className="text-blue-500">Tracker</span></h1>
             <p className="text-gray-400 text-sm">Organize your reading journey.</p>
         </div>
         <button 
-          onClick={loadContent}
+          onClick={handleRefresh}
           disabled={loading}
           className="p-2 bg-gray-800 rounded-full text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
         >
@@ -94,9 +120,9 @@ const HomePage: React.FC = () => {
              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
          </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {content.map((manga) => (
-            <div key={manga.id} className="flex flex-col">
+            <div key={manga.id} className="flex flex-col h-full">
                 <MangaCard 
                     manga={manga} 
                     onClick={() => navigate(`/details/${manga.id}`, { state: { manga } })}

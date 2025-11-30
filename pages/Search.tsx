@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { Search as SearchIcon, Loader2 } from 'lucide-react';
 import { searchManga } from '../services/anilist';
@@ -24,12 +25,12 @@ const SearchPage: React.FC = () => {
   }, [query]);
 
   return (
-    <div className="p-4 pb-24 min-h-screen">
+    <div className="p-4 pb-24 min-h-screen max-w-7xl mx-auto w-full">
       <h1 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
         Find Manhwa
       </h1>
       
-      <form onSubmit={handleSearch} className="relative mb-6">
+      <form onSubmit={handleSearch} className="relative mb-6 max-w-xl">
         <input
           type="text"
           value={query}
@@ -40,7 +41,7 @@ const SearchPage: React.FC = () => {
         <SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
         <button 
           type="submit" 
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 p-1.5 rounded-lg text-white disabled:opacity-50"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 p-1.5 rounded-lg text-white disabled:opacity-50 hover:bg-blue-500 transition-colors"
           disabled={loading || !query}
         >
           {loading ? <Loader2 size={16} className="animate-spin" /> : <SearchIcon size={16} />}
@@ -48,7 +49,7 @@ const SearchPage: React.FC = () => {
       </form>
 
       {results.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {results.map((manga) => (
             <MangaCard 
               key={manga.id} 

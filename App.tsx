@@ -1,5 +1,4 @@
-
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ReactNode, ErrorInfo } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import BottomNav from './components/BottomNav';
 import SearchPage from './pages/Search';
@@ -9,18 +8,27 @@ import RecommendationsPage from './pages/Recommendations';
 import HomePage from './pages/Home';
 import { AlertTriangle } from 'lucide-react';
 
+interface ErrorBoundaryProps {
+  children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
 // Error Boundary to catch runtime crashes
-class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean, error: Error | null }> {
-  constructor(props: { children: ReactNode }) {
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: Error) {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
   }
 
@@ -57,17 +65,23 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <HashRouter>
-        <div className="max-w-md mx-auto bg-gray-900 min-h-screen relative shadow-2xl overflow-hidden">
-          {/* The max-w-md constrains it to "mobile size" on desktop for a better preview */}
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/library" element={<LibraryPage />} />
-            <Route path="/details/:id" element={<DetailsPage />} />
-            <Route path="/recommendations" element={<RecommendationsPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+        {/* Main Layout Container */}
+        <div className="bg-gray-900 min-h-screen relative text-gray-100 flex flex-col md:flex-row">
+          
           <BottomNav />
+
+          {/* Content Area */}
+          {/* Mobile: pb-20 (nav height). Desktop: pl-64 (sidebar width), no bottom pad */}
+          <div className="flex-1 w-full pb-20 md:pb-0 md:pl-64 transition-all duration-300">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/library" element={<LibraryPage />} />
+              <Route path="/details/:id" element={<DetailsPage />} />
+              <Route path="/recommendations" element={<RecommendationsPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </div>
         </div>
       </HashRouter>
     </ErrorBoundary>
