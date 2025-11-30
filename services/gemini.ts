@@ -56,7 +56,18 @@ export const getRecommendations = async (library: Manga[], sourceManga?: Manga):
         }
     });
 
-    const recommendations = JSON.parse(response.text || "[]");
+    // Clean the response text to remove potential Markdown code blocks
+    let jsonText = response.text || "[]";
+    jsonText = jsonText.replace(/^```json/g, "").replace(/^```/g, "").replace(/```$/g, "").trim();
+
+    let recommendations = [];
+    try {
+      recommendations = JSON.parse(jsonText);
+    } catch (parseError) {
+      console.error("Failed to parse Gemini response:", jsonText);
+      return [];
+    }
+    
     const results: RecommendedManga[] = [];
 
     // Fetch details for each recommended title
