@@ -34,13 +34,16 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
             The application encountered an unexpected error.
           </p>
           <div className="bg-gray-800 p-4 rounded-lg text-left text-xs text-red-300 font-mono w-full max-w-sm overflow-auto">
-            {this.state.error?.toString()}
+            {this.state.error?.toString() || "Unknown Error"}
           </div>
           <button 
-            onClick={() => window.location.reload()}
+            onClick={() => {
+                localStorage.clear();
+                window.location.reload();
+            }}
             className="mt-6 bg-blue-600 px-6 py-2 rounded-lg font-bold hover:bg-blue-500"
           >
-            Reload App
+            Reset App & Data
           </button>
         </div>
       );

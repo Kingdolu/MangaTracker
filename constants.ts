@@ -24,10 +24,5 @@ const getEnv = (key: string): string => {
   return '';
 };
 
-// Supabase Configuration
-// We check multiple naming conventions to support different hosting providers
-export const SUPABASE_URL = getEnv('VITE_SUPABASE_URL') || getEnv('REACT_APP_SUPABASE_URL') || getEnv('SUPABASE_URL');
-export const SUPABASE_KEY = getEnv('VITE_SUPABASE_KEY') || getEnv('REACT_APP_SUPABASE_KEY') || getEnv('SUPABASE_KEY');
-
 // Gemini Configuration
 export const GEMINI_API_KEY = getEnv('VITE_API_KEY') || getEnv('REACT_APP_API_KEY') || getEnv('API_KEY') || getEnv('GOOGLE_GENAI_API_KEY');

@@ -1,15 +1,10 @@
 
-import { createClient } from '@supabase/supabase-js';
-import { SUPABASE_URL, SUPABASE_KEY } from '../constants';
+// Backend integration removed as requested.
+// This file is kept as a placeholder to prevent import errors in other files that might reference it
+// before they are fully updated, but it exports null/no-ops.
 
-// Only create the client if keys are present
-export const supabase = (SUPABASE_URL && SUPABASE_KEY) 
-  ? createClient(SUPABASE_URL, SUPABASE_KEY) 
-  : null;
+export const supabase = null;
 
-// Helper to map Supabase row to LibraryItem
-export const mapRowToLibraryItem = (row: any) => ({
-  ...row.manga_data,
-  readingStatus: row.status,
-  savedAt: row.saved_at
-});
+export const mapRowToLibraryItem = (row: any) => {
+  return row;
+};
