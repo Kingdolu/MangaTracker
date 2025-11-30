@@ -1,0 +1,5 @@
+{
+  "name": "ManhwaTracker",
+  "description": "A mobile-first manhwa organizer and tracker. Search titles via AniList, organize them into lists (Reading, Completed, etc.), and get AI-powered recommendations using Gemini.",
+  "requestFramePermissions": []
+}
