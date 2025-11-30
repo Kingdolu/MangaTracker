@@ -25,6 +25,7 @@ export interface Manga {
   chapters: number | null;
   averageScore: number | null;
   genres: string[];
+  countryOfOrigin: string;
 }
 
 export interface LibraryItem extends Manga {

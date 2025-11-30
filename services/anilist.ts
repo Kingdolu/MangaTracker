@@ -2,9 +2,9 @@ import { ANILIST_API_URL } from '../constants';
 import { Manga } from '../types';
 
 const SEARCH_QUERY = `
-query ($search: String) {
+query ($search: String, $genre: String, $country: CountryCode) {
   Page(page: 1, perPage: 20) {
-    media(search: $search, type: MANGA, sort: SEARCH_MATCH) {
+    media(search: $search, genre: $genre, countryOfOrigin: $country, type: MANGA, sort: [SEARCH_MATCH, POPULARITY_DESC]) {
       id
       title {
         romaji
@@ -20,6 +20,7 @@ query ($search: String) {
       chapters
       averageScore
       genres
+      countryOfOrigin
     }
   }
 }
@@ -44,13 +45,30 @@ query ($page: Int) {
       chapters
       averageScore
       genres
+      countryOfOrigin
     }
   }
 }
 `;
 
-export const searchManga = async (query: string): Promise<Manga[]> => {
+export const searchManga = async (query: string, genre?: string, country?: string): Promise<Manga[]> => {
   try {
+    const variables: any = {};
+    if (query && query.trim() !== '') {
+      variables.search = query;
+    }
+    if (genre && genre !== 'All') {
+      variables.genre = genre;
+    }
+    if (country && country !== 'All') {
+      variables.country = country;
+    }
+
+    // If neither search nor filters provided, return empty
+    if (Object.keys(variables).length === 0) {
+      return [];
+    }
+
     const response = await fetch(ANILIST_API_URL, {
       method: 'POST',
       headers: {
@@ -59,7 +77,7 @@ export const searchManga = async (query: string): Promise<Manga[]> => {
       },
       body: JSON.stringify({
         query: SEARCH_QUERY,
-        variables: { search: query },
+        variables,
       }),
     });
 

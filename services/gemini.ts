@@ -1,17 +1,10 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { Manga, RecommendedManga } from "../types";
 import { searchManga } from "./anilist";
-import { GEMINI_API_KEY } from "../constants";
 
 export const getRecommendations = async (library: Manga[], sourceManga?: Manga): Promise<RecommendedManga[]> => {
-  // Safety check: if no key, return empty immediately instead of crashing
-  if (!GEMINI_API_KEY) {
-    console.warn("Gemini API Key is missing. Recommendations disabled.");
-    return [];
-  }
-
-  const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+  // Use process.env.API_KEY directly as per guidelines
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   let prompt = "";
 
